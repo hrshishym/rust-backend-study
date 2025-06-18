@@ -1,5 +1,5 @@
 // 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 enum Suit {
     Club,
     Diamond,
@@ -8,16 +8,24 @@ enum Suit {
 }
 
 //
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 struct Card {
     suit: Suit,
     rank: i32,
 }
 
 fn main() {
-    let suit = Suit::Club;
-    let rank = 10;
-    let card = Card { suit, rank };
-    println!("Created a card with suit: {:?} and rank: {}", card.suit, card.rank);
-    println!("Card is {:?}", card);
+    // Vec
+    let mut deck: Vec<Card> = Vec::new();
+    let suits = [Suit::Club, Suit::Diamond, Suit::Heart, Suit::Spade];
+    
+    // Deckの作成
+    for suit in suits {
+        for rank in 1..=13 {
+            deck.push(Card { suit, rank });
+        }
+    }
+
+    println!("Deck: {:?}", deck);
+
 }
