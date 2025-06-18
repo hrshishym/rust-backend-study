@@ -1,7 +1,7 @@
 use rand::seq::SliceRandom;
 
 // 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 enum Suit {
     Club,
     Diamond,
@@ -10,7 +10,7 @@ enum Suit {
 }
 
 //
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 struct Card {
     suit: Suit,
     rank: i32,
@@ -77,5 +77,33 @@ fn main() {
     println!("\n=== 新しい手札 ===\n");
     for (i, card) in hand.iter().enumerate() {
         println!("{:}: {:?} {:}", i + 1, card.suit, card.rank);
+    }
+
+    // 役の判定
+    // フラッシュ
+    let suit = hand.first().unwrap().suit;
+    let is_flash = hand.iter().all(|card| card.suit == suit);
+
+    // ペア数のチェック
+    // 1から13までのランクの出現回数をカウント
+    let mut rank_count = [0; 14]; // 1から13までのランクをカウントするための配列
+    for card in &hand {
+        rank_count[card.rank as usize] += 1;
+    }
+
+    if is_flash {
+        println!("\n=== フラッシュ ===");
+    } else if rank_count.iter().any(|&count| count == 4) {
+        println!("\n=== フォーカード ===");
+    } else if rank_count.iter().any(|&count| count == 3) && rank_count.iter().any(|&count| count == 2) {
+        println!("\n=== フルハウス ===");
+    } else if rank_count.iter().any(|&count| count == 3) {
+        println!("\n=== スリーカード ===");
+    } else if rank_count.iter().filter(|&&count| count == 2).count() == 2 {
+        println!("\n=== ツーペア ===");
+    } else if rank_count.iter().any(|&count| count == 2) {
+        println!("\n=== ワンペア ===");
+    } else {
+        println!("\n=== ノーペア ===");
     }
 }
